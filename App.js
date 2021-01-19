@@ -4,14 +4,16 @@ import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Amplify from "aws-amplify";
-import awsExports from "./aws-exports";
-Amplify.configure(awsExports);
+import { withAuthenticator } from 'aws-amplify-react-native'
+import Amplify from 'aws-amplify'
+import config from './aws-exports'
+
+Amplify.configure(config)
 
 import ChatRoomScreen from './screens/ChatRoomScreen'
 import ChatsScreen from "./screens/ChatsScreen";
 
-export default function App() {
+function App(){
   const Stack = createStackNavigator();
 
   return (
@@ -24,6 +26,8 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+export default withAuthenticator(App);
 
 const styles = StyleSheet.create({
   container: {

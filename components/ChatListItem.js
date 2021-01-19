@@ -5,7 +5,7 @@ import moment from 'moment'
 import { useNavigation } from '@react-navigation/native';
 
 
-const chatListItem = (props) => {
+const ChatListItem = (props) => {
   const { chatRoom } = props;
   const user = chatRoom.users[1]
   const lastMessage = chatRoom.lastMessage;
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default chatListItem;
+export default ChatListItem;
