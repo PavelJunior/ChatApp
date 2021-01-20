@@ -1,14 +1,14 @@
 import React from 'react'
-import {StyleSheet, View, FlatList} from 'react-native'
-import ChatRoomsData from './../data/ChatRooms'
-import ChatListItem from './../components/ChatListItem'
+import {StyleSheet, View, Text, FlatList} from 'react-native'
+import UsersData from "../data/Users";
+import ContactListItem from "../components/ContactListItem";
 
-const ChatsScreen = () => {
+const ContactsScreen = () => {
   return (
     <View style={styles.container}>
-      <FlatList data={ChatRoomsData}
+      <FlatList data={UsersData}
                 style={styles.list}
-                renderItem={({item}) => <ChatListItem chatRoom={item}/>}
+                renderItem={({item}) => <ContactListItem user={item}/>}
                 keyExtractor={(item) => item.id}
       />
     </View>
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ChatsScreen;
+export default ContactsScreen;
