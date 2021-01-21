@@ -147,6 +147,9 @@ export const createChatRoom = /* GraphQL */ `
       chatRoomUsers {
         nextToken
       }
+      messages {
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -160,6 +163,9 @@ export const updateChatRoom = /* GraphQL */ `
     updateChatRoom(input: $input, condition: $condition) {
       id
       chatRoomUsers {
+        nextToken
+      }
+      messages {
         nextToken
       }
       createdAt
@@ -177,7 +183,94 @@ export const deleteChatRoom = /* GraphQL */ `
       chatRoomUsers {
         nextToken
       }
+      messages {
+        nextToken
+      }
       createdAt
+      updatedAt
+    }
+  }
+`;
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    createMessage(input: $input, condition: $condition) {
+      id
+      createdAt
+      content
+      userID
+      chatRoomID
+      user {
+        id
+        name
+        imageUrl
+        status
+        createdAt
+        updatedAt
+      }
+      chatRoom {
+        id
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const updateMessage = /* GraphQL */ `
+  mutation UpdateMessage(
+    $input: UpdateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    updateMessage(input: $input, condition: $condition) {
+      id
+      createdAt
+      content
+      userID
+      chatRoomID
+      user {
+        id
+        name
+        imageUrl
+        status
+        createdAt
+        updatedAt
+      }
+      chatRoom {
+        id
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const deleteMessage = /* GraphQL */ `
+  mutation DeleteMessage(
+    $input: DeleteMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    deleteMessage(input: $input, condition: $condition) {
+      id
+      createdAt
+      content
+      userID
+      chatRoomID
+      user {
+        id
+        name
+        imageUrl
+        status
+        createdAt
+        updatedAt
+      }
+      chatRoom {
+        id
+        createdAt
+        updatedAt
+      }
       updatedAt
     }
   }
