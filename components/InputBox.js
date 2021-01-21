@@ -10,7 +10,7 @@ import {
 } from '@expo/vector-icons';
 
 import {API, graphqlOperation, Auth} from 'aws-amplify'
-import {createChatRoomUser, createMessage} from './../graphql/mutations'
+import {createChatRoomUser, createMessage, updateChatRoom} from './../graphql/mutations'
 
 
 const InputBox = (props) => {
@@ -30,9 +30,26 @@ const InputBox = (props) => {
     console.log('microphone')
   }
 
-  const onSendPress = async () => {
+  const updateChatRoomLastMessage = async (messageId) => {
     try {
       await API.graphql(
+        graphqlOperation(
+          updateChatRoom, {
+            input: {
+              id: chatRoomId,
+              lastMessageID: messageId,
+            }
+          }
+        )
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const onSendPress = async () => {
+    try {
+      const newMessageData = await API.graphql(
         graphqlOperation(
           createMessage, {
             input: {
@@ -43,6 +60,8 @@ const InputBox = (props) => {
           }
         )
       )
+      await updateChatRoomLastMessage(newMessageData.data.createMessage.id)
+
     } catch (e) {
       console.log(e)
     }

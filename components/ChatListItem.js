@@ -22,7 +22,7 @@ const ChatListItem = (props) => {
     getOtherUser();
   }, [])
 
-  const lastMessage = "";
+  const lastMessage = chatRoom.lastMessage;
 
   const navigation = useNavigation();
 
@@ -42,11 +42,13 @@ const ChatListItem = (props) => {
           <Image source={{ url: otherUser.imageUrl }} style={styles.avatar}/>
           <View style={styles.midContainer}>
             <Text style={styles.username}>{otherUser.name}</Text>
-            <Text numberOfLines={2} style={styles.lastMessage}>{lastMessage.content}</Text>
+            <Text numberOfLines={2} style={styles.lastMessage}>{
+              chatRoom.lastMessage ? chatRoom.lastMessage.content : ""
+            }</Text>
           </View>
         </View>
         <Text style={styles.time}>
-          {moment(lastMessage.createdAt).format("DD/MM/YYYY")}
+          {moment(chatRoom.lastMessage.createdAt).format("DD/MM/YYYY")}
         </Text>
       </View>
     </TouchableWithoutFeedback>

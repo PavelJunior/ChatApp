@@ -15,7 +15,9 @@ const ContactListItem = (props) => {
     try {
       const newChatRoomData = await API.graphql(
         graphqlOperation(createChatRoom, {
-          input: {}
+          input: {
+            lastMessageID: "zz753fca-e8c3-473b-8e85-b14196e84e16"
+          }
         })
       )
 
@@ -25,6 +27,8 @@ const ContactListItem = (props) => {
       }
 
       const newChatRoom = newChatRoomData.data.createChatRoom;
+
+      console.log(newChatRoom)
 
       await API.graphql(
         graphqlOperation(
@@ -50,7 +54,7 @@ const ContactListItem = (props) => {
       )
 
       navigation.navigate('ChatRoom', {
-        id: newChatRoom,
+        id: newChatRoom.id,
       })
     } catch (e) {
       console.log(e)
