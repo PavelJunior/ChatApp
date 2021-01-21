@@ -51,14 +51,12 @@ const ContactListItem = (props) => {
 
       navigation.navigate('ChatRoom', {
         id: newChatRoom,
-        name: 'Some name'
       })
-    }catch (e) {
+    } catch (e) {
       console.log(e)
     }
   }
 
-  console.log(user)
   return (
     <TouchableWithoutFeedback onPress={onClick}>
       <View style={styles.container}>

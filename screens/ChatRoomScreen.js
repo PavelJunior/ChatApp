@@ -9,6 +9,7 @@ import InputBox from './../components/InputBox'
 import BG from './../assets/images/BG.png'
 
 const ChatsRoomScreen = () => {
+
   const route = useRoute();
 
   return (

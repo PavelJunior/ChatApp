@@ -5,7 +5,6 @@ import moment from 'moment'
 
 const ChatMessage = (props) => {
   const {message} = props;
-  console.log(message)
 
   const isMyMessage = () => {
     return message.user.id === 'u1';

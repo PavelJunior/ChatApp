@@ -1,14 +1,28 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View, Text, Image} from 'react-native'
-import data from './../data/ChatRooms'
+import {Auth} from 'aws-amplify'
 import moment from 'moment'
 import { useNavigation } from '@react-navigation/native';
 
 
 const ChatListItem = (props) => {
   const { chatRoom } = props;
-  const user = chatRoom.users[1]
-  const lastMessage = chatRoom.lastMessage;
+  const [ otherUser, setOtherUser] = useState({})
+
+  useEffect(() => {
+    const getOtherUser = async () => {
+      const userInfo = await Auth.currentAuthenticatedUser()
+      if(chatRoom.chatRoomUsers.items[0].user.id === userInfo.attributes.sub){
+        setOtherUser(chatRoom.chatRoomUsers.items[1].user)
+      } else {
+        setOtherUser(chatRoom.chatRoomUsers.items[0].user)
+      }
+    }
+
+    getOtherUser();
+  }, [])
+
+  const lastMessage = "";
 
   const navigation = useNavigation();
 
@@ -16,7 +30,7 @@ const ChatListItem = (props) => {
   const onClick = () => {
     navigation.navigate('ChatRoom', {
       id: chatRoom.id,
-      name: user.name
+      name: otherUser.name
     })
   }
 
@@ -25,9 +39,9 @@ const ChatListItem = (props) => {
     <TouchableWithoutFeedback onPress={onClick}>
       <View style={styles.container}>
         <View style={styles.leftContainer}>
-          <Image source={{ url: user.imageUri }} style={styles.avatar}/>
+          <Image source={{ url: otherUser.imageUrl }} style={styles.avatar}/>
           <View style={styles.midContainer}>
-            <Text style={styles.username}>{user.name}</Text>
+            <Text style={styles.username}>{otherUser.name}</Text>
             <Text numberOfLines={2} style={styles.lastMessage}>{lastMessage.content}</Text>
           </View>
         </View>
