@@ -4,10 +4,10 @@ import moment from 'moment'
 
 
 const ChatMessage = (props) => {
-  const {message} = props;
+  const {message, myId} = props;
 
   const isMyMessage = () => {
-    return message.user.id === 'u1';
+    return message.user.id === myId;
   }
 
   return (
