@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {StyleSheet, Text, FlatList, ImageBackground} from 'react-native'
+import {StyleSheet, Text, FlatList, ImageBackground, KeyboardAvoidingView} from 'react-native'
 
 import { useRoute } from '@react-navigation/native';
 
@@ -8,6 +8,7 @@ import InputBox from './../components/InputBox'
 import BG from './../assets/images/BG.png'
 import {API, graphqlOperation, Auth} from "aws-amplify";
 import {messagesByChatRoom} from "../graphql/customQueries";
+import {onCreateMessage} from "../graphql/subscriptions";
 
 
 const ChatsRoomScreen = () => {
@@ -15,21 +16,20 @@ const ChatsRoomScreen = () => {
   const [myId, setMyId] = useState(null)
   const route = useRoute();
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const messagesData = await API.graphql(
-        graphqlOperation(
-          messagesByChatRoom, {
-            chatRoomID: route.params.id,
-            sortDirection: "DESC",
-          }
-        )
+  const fetchMessages = async () => {
+    const messagesData = await API.graphql(
+      graphqlOperation(
+        messagesByChatRoom, {
+          chatRoomID: route.params.id,
+          sortDirection: "DESC",
+        }
       )
+    )
 
-      console.log(messagesData)
-      setMessages(messagesData.data.messagesByChatRoom.items)
-    }
+    setMessages(messagesData.data.messagesByChatRoom.items)
+  }
 
+  useEffect(() => {
     fetchMessages()
   }, [])
 
@@ -42,15 +42,40 @@ const ChatsRoomScreen = () => {
     getMyId()
   }, [])
 
+  useEffect(() => {
+    const subscription = API.graphql(
+      graphqlOperation(onCreateMessage)
+    ).subscribe({
+      next: (data) => {
+        const newMessage = data.value.data.onCreateMessage;
+
+        if(newMessage && newMessage.chatRoomID !== route.params.id){
+          console.log("Message is in another room.")
+          return;
+        }
+
+        fetchMessages()
+      }
+    })
+
+    return () => subscription.unsubscribe();
+  }, [])
+
+
   return (
-    <ImageBackground style={styles.background} source={BG}>
-      <FlatList data={messages}
-                renderItem={({item}) => <ChatMessage message={item} myId={myId}/>}
-                keyExtractor={(item) => item.id}
-                inverted
-      />
-      <InputBox chatRoomId={route.params.id}/>
-    </ImageBackground>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={100}
+    >
+      <ImageBackground style={styles.background} source={BG}>
+        <FlatList data={messages}
+                  renderItem={({item}) => <ChatMessage message={item} myId={myId}/>}
+                  keyExtractor={(item) => item.id}
+                  inverted
+        />
+        <InputBox chatRoomId={route.params.id}/>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   )
 }
 
