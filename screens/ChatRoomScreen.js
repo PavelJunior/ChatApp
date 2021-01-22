@@ -11,7 +11,7 @@ import {messagesByChatRoom} from "../graphql/customQueries";
 import {onCreateMessage} from "../graphql/subscriptions";
 
 
-const ChatsRoomScreen = () => {
+const ChatsRoomScreen = (props) => {
   const [messages, setMessages] = useState([])
   const [myId, setMyId] = useState(null)
   const route = useRoute();

@@ -22,7 +22,7 @@ const ChatsScreen = () => {
       )
 
       let chatRooms = userData.data.getUser.chatRoomUser.items;
-      setChatRooms(chatRooms.filter(item => item.chatRoom.lastMessage))
+      setChatRooms(chatRooms.filter(item => item.chatRoom))
     } catch (e) {
       console.log(e)
     }

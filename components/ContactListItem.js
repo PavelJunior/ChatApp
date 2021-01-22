@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { API, graphqlOperation, Auth } from 'aws-amplify'
 import { createChatRoom, createChatRoomUser } from './../graphql/mutations'
+import { getUser } from "../graphql/customQueries";
 
 
 const ContactListItem = (props) => {
@@ -11,50 +12,82 @@ const ContactListItem = (props) => {
 
   const navigation = useNavigation()
 
+  const isChatExists = async (currentUserId, otherUserId) => {
+    const userData = await API.graphql(
+      graphqlOperation(getUser, {
+        id: otherUserId,
+      })
+    )
+
+    let chatId = null;
+
+    userData.data.getUser.chatRoomUser.items.forEach((i) => {
+      const chatRoomUsers = i.chatRoom.chatRoomUsers ? i.chatRoom.chatRoomUsers.items : []
+      chatRoomUsers.forEach((u) => {
+        if(u.user.id === currentUserId){
+          chatId = i.chatRoomID
+        }
+      })
+    });
+
+    return chatId;
+  }
+
   const onClick = async () => {
     try {
-      const newChatRoomData = await API.graphql(
-        graphqlOperation(createChatRoom, {
-          input: {
-            lastMessageID: "zz753fca-e8c3-473b-8e85-b14196e84e16"
+      // check if this chat already existed
+      const currentUserInfo = await Auth.currentAuthenticatedUser()
+
+      isChatExists(currentUserInfo.attributes.sub, user.id).then(async (chatId) => {
+        if(chatId != null){
+          navigation.navigate('ChatRoom', {
+            id: chatId,
+          })
+        } else {
+          // creating new chat room
+          const newChatRoomData = await API.graphql(
+            graphqlOperation(createChatRoom, {
+              input: {
+                lastMessageID: ""
+              }
+            })
+          )
+
+          if (!newChatRoomData.data){
+            console.log("Failed to create chat room")
+            return;
           }
-        })
-      )
 
-      if (!newChatRoomData.data){
-        console.log("Failed to create chat room")
-        return;
-      }
+          const newChatRoom = newChatRoomData.data.createChatRoom;
 
-      const newChatRoom = newChatRoomData.data.createChatRoom;
+          // adding clicked user to chat
+          await API.graphql(
+            graphqlOperation(
+              createChatRoomUser, {
+                input: {
+                  userID: user.id,
+                  chatRoomID: newChatRoom.id
+                }
+              }
+            )
+          )
 
-      console.log(newChatRoom)
+          // adding yourself to chat
+          await API.graphql(
+            graphqlOperation(
+              createChatRoomUser, {
+                input: {
+                  userID: currentUserInfo.attributes.sub,
+                  chatRoomID: newChatRoom.id
+                }
+              }
+            )
+          )
 
-      await API.graphql(
-        graphqlOperation(
-          createChatRoomUser, {
-            input: {
-              userID: user.id,
-              chatRoomID: newChatRoom.id
-            }
-          }
-        )
-      )
-
-      const userInfo = await Auth.currentAuthenticatedUser()
-      await API.graphql(
-        graphqlOperation(
-          createChatRoomUser, {
-            input: {
-              userID: userInfo.attributes.sub,
-              chatRoomID: newChatRoom.id
-            }
-          }
-        )
-      )
-
-      navigation.navigate('ChatRoom', {
-        id: newChatRoom.id,
+          navigation.navigate('ChatRoom', {
+            id: newChatRoom.id,
+          })
+        }
       })
     } catch (e) {
       console.log(e)
