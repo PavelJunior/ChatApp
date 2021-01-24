@@ -7,13 +7,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-  FontAwesome5,
-  Entypo,
-  Fontisto,
-} from '@expo/vector-icons';
+import Entypo from 'react-native-vector-icons/dist/Entypo'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+
+Entypo.loadFont()
+AntDesign.loadFont()
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -24,12 +22,13 @@ function getHeaderTitle(route){
 }
 
 function TabNavigation(){
+  // console.log(Entypo)
   return (
       <Tab.Navigator>
         <Tab.Screen name="Chats" component={ChatsScreen} options={{
           tabBarLabel: "Chats",
           tabBarIcon: () => (
-            <MaterialCommunityIcons
+            <Entypo
               name="chat"
               color={'gray'}
               size={24}
@@ -38,7 +37,7 @@ function TabNavigation(){
         }} />
         <Tab.Screen name="Contacts" component={ContactsScreen} options={{
           tabBarIcon: () => (
-            <MaterialCommunityIcons
+            <AntDesign
               name="contacts"
               color={'gray'}
               size={24}

@@ -1,13 +1,17 @@
 import React, {useState, useEffect} from 'react'
 import {StyleSheet, View, TextInput, TouchableOpacity} from 'react-native'
+import ActionSheet from 'react-native-actionsheet'
+import AttachmentActionSheet from './../components/ActionSheet'
 
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-  FontAwesome5,
-  Entypo,
-  Fontisto,
-} from '@expo/vector-icons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Entypo from 'react-native-vector-icons/Entypo'
+import Fontisto from 'react-native-vector-icons/Fontisto'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
+MaterialIcons.loadFont()
+Entypo.loadFont()
+Fontisto.loadFont()
+MaterialCommunityIcons.loadFont()
 
 import {API, graphqlOperation, Auth} from 'aws-amplify'
 import {createChatRoomUser, createMessage, updateChatRoom} from './../graphql/mutations'
@@ -76,24 +80,28 @@ const InputBox = (props) => {
     }
   }
 
+  const showActionSheet = () => {
+    this.ActionSheet.show()
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.mainContainer}>
-        <FontAwesome5 name="laugh-beam" size={24} color="grey" />
+        <Entypo name="emoji-happy" size={24} color="grey" />
         <TextInput placeholder="Type a message"
                    multiline
                    value={message}
                    onChangeText={setMessage}
                    style={styles.textInput}
         />
-        <Entypo name='attachment' size={24} color='gray' style={styles.icon}/>
+        <AttachmentActionSheet/>
         {!message && <Fontisto name="camera" size={24} color="grey" style={styles.icon} />}
       </View>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.buttonContainer}>
           {!message ?
             <MaterialCommunityIcons name="microphone" size={28} color="white"/> :
-            <MaterialIcons name="send" size={28} color="white"/>
+            <MaterialIcons name="send" size={28} color="white" onPress={onPress}/>
           }
         </View>
       </TouchableOpacity>
