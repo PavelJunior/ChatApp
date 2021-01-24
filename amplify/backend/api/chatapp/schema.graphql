@@ -33,6 +33,7 @@ type Message @model
   content: String!
   userID: ID!
   chatRoomID: ID!
+  type: String!
   user: User @connection(fields: ["userID"])
   chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
 }

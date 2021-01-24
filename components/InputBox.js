@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {StyleSheet, View, TextInput, TouchableOpacity} from 'react-native'
-import ActionSheet from 'react-native-actionsheet'
-import AttachmentActionSheet from './../components/ActionSheet'
+import AttachmentActionSheet from './AttachmentActionSheet'
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -14,8 +13,45 @@ Fontisto.loadFont()
 MaterialCommunityIcons.loadFont()
 
 import {API, graphqlOperation, Auth} from 'aws-amplify'
-import {createChatRoomUser, createMessage, updateChatRoom} from './../graphql/mutations'
+import {createMessage, updateChatRoom} from './../graphql/mutations'
 
+export const sendMessage = async (content, chatRoomId, userId, messageType) => {
+  try {
+    const newMessageData = await API.graphql(
+      graphqlOperation(
+        createMessage, {
+          input: {
+            content: content,
+            chatRoomID: chatRoomId,
+            userID: userId,
+            type: messageType
+          }
+        }
+      )
+    )
+    await updateChatRoomLastMessage(chatRoomId, newMessageData.data.createMessage.id)
+
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const updateChatRoomLastMessage = async (chatRoomId, messageId) => {
+  try {
+    await API.graphql(
+      graphqlOperation(
+        updateChatRoom, {
+          input: {
+            id: chatRoomId,
+            lastMessageID: messageId,
+          }
+        }
+      )
+    );
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 const InputBox = (props) => {
   const {chatRoomId} = props;
@@ -34,49 +70,12 @@ const InputBox = (props) => {
     console.log('microphone')
   }
 
-  const updateChatRoomLastMessage = async (messageId) => {
-    try {
-      await API.graphql(
-        graphqlOperation(
-          updateChatRoom, {
-            input: {
-              id: chatRoomId,
-              lastMessageID: messageId,
-            }
-          }
-        )
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  const onSendPress = async () => {
-    try {
-      const newMessageData = await API.graphql(
-        graphqlOperation(
-          createMessage, {
-            input: {
-              content: message,
-              chatRoomID: chatRoomId,
-              userID: userId,
-            }
-          }
-        )
-      )
-      await updateChatRoomLastMessage(newMessageData.data.createMessage.id)
-
-    } catch (e) {
-      console.log(e)
-    }
-    setMessage('')
-  }
-
-  const onPress = () => {
+  const onPress = async () => {
     if(!message){
       onMicrophonePress()
     } else {
-      onSendPress()
+      await sendMessage(message, chatRoomId, userId, 'text')
+      setMessage('')
     }
   }
 
@@ -94,7 +93,7 @@ const InputBox = (props) => {
                    onChangeText={setMessage}
                    style={styles.textInput}
         />
-        <AttachmentActionSheet/>
+        <AttachmentActionSheet userId={userId} chatRoomId={chatRoomId}/>
         {!message && <Fontisto name="camera" size={24} color="grey" style={styles.icon} />}
       </View>
       <TouchableOpacity onPress={onPress}>

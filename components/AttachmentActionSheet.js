@@ -3,7 +3,9 @@ import ActionSheet from 'react-native-actionsheet'
 import Entypo from 'react-native-vector-icons/Entypo/'
 import {View, Text, TouchableOpacity} from 'react-native'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
+import {API, graphqlOperation, Storage} from 'aws-amplify';
+import {createMessage} from '../graphql/mutations';
+import {sendMessage} from './InputBox'
 class AttachmentActionSheet extends React.Component {
   state = {
     attachment: null
@@ -11,6 +13,23 @@ class AttachmentActionSheet extends React.Component {
 
   showActionSheet = () => {
     this.ActionSheet.show()
+  }
+
+  uploadFile = async (data) => {
+    try {
+      const response = await fetch(data.uri)
+      const blob = await response.blob()
+      const name = Math.random().toString(36).substring(7)
+
+      Storage.put(`${name}.jpeg`, blob, {
+        contentType: 'image/jpeg',
+      }).then(async (r) => {
+        console.log(r)
+        sendMessage(r.key, this.props.chatRoomId, this.props.userId, 'photo')
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   launchCameraOptions = {
@@ -29,18 +48,11 @@ class AttachmentActionSheet extends React.Component {
     switch (index){
       case 0:
         console.log("Camera should launch")
-        launchCamera(this.launchCameraOptions, response => {
-          console.log(response)
-      })
+        launchCamera(this.launchCameraOptions, response => this.uploadFile(response))
         break
 
       case 1:
-        launchImageLibrary(this.launchImageLibraryOptions, response => {
-          if (response.uri) {
-            console.log(response.uri)
-            this.setState({ photo: response })
-          }
-        })
+        launchImageLibrary(this.launchImageLibraryOptions, response => this.uploadFile(response))
         break
     }
 

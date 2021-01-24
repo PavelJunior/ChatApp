@@ -67,6 +67,7 @@ export const messagesByChatRoom = /* GraphQL */ `
         userID
         chatRoomID
         updatedAt
+        type
         user {
           id
           name
