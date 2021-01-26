@@ -30,7 +30,7 @@ const ChatMessage = (props) => {
         marginRight: isMyMessage() ? 0 : 50,
       }]}>
         {!isMyMessage() && <Text style={styles.name}>{message.user.name}</Text>}
-        {message.type === 'text' && <Text style={styles.message}>{message.content}</Text>}
+        {message.type === 'text' && <Text>{message.content}</Text>}
         {message.type === 'photo' && <ImageMessage file={file}/>}
         {message.type === 'audio' && <AudioMessage file={file}/>}
         <Text style={styles.time}>{moment(message.createdAt).fromNow()}</Text>
@@ -50,9 +50,6 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     marginBottom: 5,
-  },
-  message: {
-
   },
   time: {
     alignSelf: 'flex-end',

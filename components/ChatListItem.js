@@ -23,7 +23,6 @@ const ChatListItem = (props) => {
   }, [])
 
   const lastMessage = chatRoom.lastMessage;
-
   const navigation = useNavigation();
 
 
@@ -34,6 +33,17 @@ const ChatListItem = (props) => {
     })
   }
 
+  const getLastMessage = () => {
+
+    if (lastMessage.type == 'text') {
+      return lastMessage ? lastMessage.content : ""
+    } else if (lastMessage.type == 'photo') {
+      return ("Photo")
+    } else if (lastMessage.type == 'audio') {
+      return ("Voice Message")
+    }
+  }
+
 
   return (
     <TouchableWithoutFeedback onPress={onClick}>
@@ -42,13 +52,13 @@ const ChatListItem = (props) => {
           <Image source={{ url: otherUser.imageUrl }} style={styles.avatar}/>
           <View style={styles.midContainer}>
             <Text style={styles.username}>{otherUser.name}</Text>
-            <Text numberOfLines={2} style={styles.lastMessage}>{
-              chatRoom.lastMessage ? chatRoom.lastMessage.content : ""
-            }</Text>
+            <Text numberOfLines={2} style={styles.lastMessage}>
+              {getLastMessage()}
+            </Text>
           </View>
         </View>
         <Text style={styles.time}>
-          {chatRoom.lastMessage && moment(chatRoom.lastMessage.createdAt).format("DD/MM/YYYY")}
+          {lastMessage && moment(lastMessage.createdAt).format("DD/MM/YYYY")}
         </Text>
       </View>
     </TouchableWithoutFeedback>

@@ -28,6 +28,7 @@ export const getUser = /* GraphQL */ `
               id
               content
               updatedAt
+              type
               user {
                 id
                 name

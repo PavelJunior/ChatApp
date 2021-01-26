@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import {StyleSheet, View, ActivityIndicator, Image} from 'react-native';
-import {Storage} from 'aws-amplify';
 
 
 const AudioMessage = (props) => {
@@ -28,9 +27,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     margin: 'auto',
-
-
-
   }
 })
 
