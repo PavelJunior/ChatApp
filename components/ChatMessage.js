@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, Image} from 'react-native'
 import moment from 'moment'
 import {Storage} from 'aws-amplify';
 import AudioMessage from '../components/AudioMessage'
+import ImageMessage from '../components/ImageMessage'
 
 const ChatMessage = (props) => {
   const [file, setFile] = useState(null)
@@ -30,7 +31,7 @@ const ChatMessage = (props) => {
       }]}>
         {!isMyMessage() && <Text style={styles.name}>{message.user.name}</Text>}
         {message.type === 'text' && <Text style={styles.message}>{message.content}</Text>}
-        {message.type === 'photo' && <Image source={{ url: file }} style={styles.image}/>}
+        {message.type === 'photo' && <ImageMessage file={file}/>}
         {message.type === 'audio' && <AudioMessage file={file}/>}
         <Text style={styles.time}>{moment(message.createdAt).fromNow()}</Text>
       </View>
@@ -57,11 +58,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     color: 'grey',
     marginTop: 8
-  },
-  image: {
-    resizeMode: 'contain',
-    flex: 1,
-    aspectRatio: 1,
   }
 })
 

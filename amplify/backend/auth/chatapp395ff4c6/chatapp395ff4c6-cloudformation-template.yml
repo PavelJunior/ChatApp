@@ -122,10 +122,6 @@ Parameters:
     Type: String
   
             
-  
-  usernameCaseSensitive:
-    Type: String
-            
         
   dependsOn:
     Type: CommaDelimitedList
@@ -141,7 +137,7 @@ Resources:
   # Created to allow the UserPool SMS Config to publish via the Simple Notification Service during MFA Process
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, 'chatap4febf5f8_sns-role', !Join ['',[ 'sns', '4febf5f8', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, 'chatap395ff4c6_sns-role', !Join ['',[ 'sns', '395ff4c6', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -153,10 +149,10 @@ Resources:
               - "sts:AssumeRole"
             Condition:
               StringEquals:
-                sts:ExternalId: chatap4febf5f8_role_external_id
+                sts:ExternalId: chatap395ff4c6_role_external_id
       Policies:
         -
-          PolicyName: chatap4febf5f8-sns-policy
+          PolicyName: chatap395ff4c6-sns-policy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -174,9 +170,6 @@ Resources:
     Properties:
       UserPoolName: !If [ShouldNotCreateEnvResources, !Ref userPoolName, !Join ['',[!Ref userPoolName, '-', !Ref env]]]
       
-      
-      UsernameConfiguration:
-        CaseSensitive: false
       
       Schema:
         
@@ -206,7 +199,7 @@ Resources:
       SmsVerificationMessage: !Ref smsVerificationMessage
       SmsConfiguration:
         SnsCallerArn: !GetAtt SNSRole.Arn
-        ExternalId: chatap4febf5f8_role_external_id
+        ExternalId: chatap395ff4c6_role_external_id
     
   
   UserPoolClientWeb:
@@ -214,7 +207,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: chatap4febf5f8_app_clientWeb
+      ClientName: chatap395ff4c6_app_clientWeb
       
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
@@ -224,7 +217,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: chatap4febf5f8_app_client
+      ClientName: chatap395ff4c6_app_client
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
@@ -235,7 +228,7 @@ Resources:
   # Created to execute Lambda which gets userpool app client config values
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', '4febf5f8', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', '395ff4c6', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -289,7 +282,7 @@ Resources:
   # Marked as depending on UserPoolClientRole for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: chatap4febf5f8_userpoolclient_lambda_iam_policy
+      PolicyName: chatap395ff4c6_userpoolclient_lambda_iam_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -306,7 +299,7 @@ Resources:
   # Marked as depending on UserPoolClientLambdaPolicy for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: chatap4febf5f8_userpoolclient_lambda_log_policy
+      PolicyName: chatap395ff4c6_userpoolclient_lambda_log_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -346,7 +339,7 @@ Resources:
   # Always created
     Type: AWS::Cognito::IdentityPool
     Properties:
-      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'chatapp4febf5f8_identitypool_4febf5f8', !Join ['',['chatapp4febf5f8_identitypool_4febf5f8', '__', !Ref env]]]
+      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'chatapp395ff4c6_identitypool_395ff4c6', !Join ['',['chatapp395ff4c6_identitypool_395ff4c6', '__', !Ref env]]]
       
       CognitoIdentityProviders:
         - ClientId:  !Ref UserPoolClient

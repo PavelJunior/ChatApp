@@ -1,6 +1,6 @@
 {
   "auth": {
-    "chatapp4febf5f8": {
+    "chatapp395ff4c6": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -16,7 +16,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authchatapp4febf5f8"
+              "userPoolId": "authchatapp395ff4c6"
             }
           },
           "additionalAuthenticationProviders": []
@@ -27,7 +27,7 @@
   "storage": {
     "bucket": {
       "service": "S3",
-      "providerPlugin": "awscloudformation",
+      "providerPlugin": "awscloudformation"
     }
   }
 }
