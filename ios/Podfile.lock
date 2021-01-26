@@ -302,8 +302,12 @@ PODS:
     - React-Core (= 0.63.4)
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
+  - RNAudioRecorderPlayer (2.6.0):
+    - React
   - RNAWSCognito (4.5.7):
     - React
+  - RNCAsyncStorage (1.12.1):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
   - RNGestureHandler (1.8.0):
@@ -312,6 +316,13 @@ PODS:
     - React-Core
   - RNScreens (2.15.2):
     - React-Core
+  - RNSound (0.11.0):
+    - React
+    - RNSound/Core (= 0.11.0)
+  - RNSound/Core (0.11.0):
+    - React
+  - RNSoundPlayer (0.10.5):
+    - React
   - RNVectorIcons (8.0.0):
     - React-Core
   - Yoga (1.14.0)
@@ -368,11 +379,15 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - RNAWSCognito (from `../node_modules/amazon-cognito-identity-js`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSound (from `../node_modules/react-native-sound`)
+  - RNSoundPlayer (from `../node_modules/react-native-sound-player`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -448,8 +463,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNAudioRecorderPlayer:
+    :path: "../node_modules/react-native-audio-recorder-player"
   RNAWSCognito:
     :path: "../node_modules/amazon-cognito-identity-js"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNGestureHandler:
@@ -458,6 +477,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSound:
+    :path: "../node_modules/react-native-sound"
+  RNSoundPlayer:
+    :path: "../node_modules/react-native-sound-player"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -503,15 +526,19 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
+  RNAudioRecorderPlayer: 9964c7c66ab7d8d2f3a1cc821bd0a5dc0eeb3908
   RNAWSCognito: 45ffe76ae51a103cc6bba1d340a13fd2c8f83a41
+  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNScreens: 3d682bcaba69a4f8e55543d90818704f34338db1
+  RNSound: c980916b596cc15c8dcd2f6ecd3b13c4881dbe20
+  RNSoundPlayer: fd4dbbff120c76f22718c4d831a13c40fc5e9efd
   RNVectorIcons: f67a1abce2ec73e62fe4606e8110e95a832bc859
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: b179f12e2a180102033029024edf7410c6b89537
+PODFILE CHECKSUM: cac24007e523e7447be54002ca9c0badb557d462
 
 COCOAPODS: 1.10.1

@@ -1,57 +1,24 @@
 import React, {useState, useEffect} from 'react'
 import {StyleSheet, View, TextInput, TouchableOpacity} from 'react-native'
 import AttachmentActionSheet from './AttachmentActionSheet'
+import {Auth} from 'aws-amplify'
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import {sendMessage} from '../utilities/messages';
+import MessageAudioRecorder from './MessageAudioRecorder'
+
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+
 
 MaterialIcons.loadFont()
 Entypo.loadFont()
 Fontisto.loadFont()
 MaterialCommunityIcons.loadFont()
 
-import {API, graphqlOperation, Auth} from 'aws-amplify'
-import {createMessage, updateChatRoom} from './../graphql/mutations'
 
-export const sendMessage = async (content, chatRoomId, userId, messageType) => {
-  try {
-    const newMessageData = await API.graphql(
-      graphqlOperation(
-        createMessage, {
-          input: {
-            content: content,
-            chatRoomID: chatRoomId,
-            userID: userId,
-            type: messageType
-          }
-        }
-      )
-    )
-    await updateChatRoomLastMessage(chatRoomId, newMessageData.data.createMessage.id)
-
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-export const updateChatRoomLastMessage = async (chatRoomId, messageId) => {
-  try {
-    await API.graphql(
-      graphqlOperation(
-        updateChatRoom, {
-          input: {
-            id: chatRoomId,
-            lastMessageID: messageId,
-          }
-        }
-      )
-    );
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 const InputBox = (props) => {
   const {chatRoomId} = props;
@@ -66,17 +33,9 @@ const InputBox = (props) => {
     fetchUser()
   }, [])
 
-  const onMicrophonePress = () => {
-    console.log('microphone')
-  }
-
-  const onPress = async () => {
-    if(!message){
-      onMicrophonePress()
-    } else {
-      await sendMessage(message, chatRoomId, userId, 'text')
-      setMessage('')
-    }
+  const onMessageSend = async () => {
+    await sendMessage(message, chatRoomId, userId, 'text')
+    setMessage('')
   }
 
   const showActionSheet = () => {
@@ -85,22 +44,22 @@ const InputBox = (props) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <AttachmentActionSheet userId={userId} chatRoomId={chatRoomId}/>
+      </View>
       <View style={styles.mainContainer}>
-        <Entypo name="emoji-happy" size={24} color="grey" />
         <TextInput placeholder="Type a message"
                    multiline
                    value={message}
                    onChangeText={setMessage}
                    style={styles.textInput}
         />
-        <AttachmentActionSheet userId={userId} chatRoomId={chatRoomId}/>
-        {!message && <Fontisto name="camera" size={24} color="grey" style={styles.icon} />}
+
       </View>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity>
         <View style={styles.buttonContainer}>
-          {!message ?
-            <MaterialCommunityIcons name="microphone" size={28} color="white"/> :
-            <MaterialIcons name="send" size={28} color="white" onPress={onPress}/>
+          {!message ? <MessageAudioRecorder userId={userId} chatRoomId={chatRoomId}/> :
+            <MaterialIcons name="send" size={28} color="white" onPress={onMessageSend}/>
           }
         </View>
       </TouchableOpacity>
@@ -125,7 +84,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   icon: {
     marginHorizontal: 5

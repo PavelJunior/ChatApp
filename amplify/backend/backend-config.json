@@ -24,28 +24,10 @@
       }
     }
   },
-  "function": {
-    "S3Triggercc9dabaf": {
-      "service": "Lambda",
-      "providerPlugin": "awscloudformation",
-      "build": true
-    }
-  },
   "storage": {
     "bucket": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "S3Triggercc9dabaf",
-          "attributes": [
-            "Name",
-            "Arn",
-            "LambdaExecutionRole"
-          ]
-        }
-      ]
     }
   }
 }

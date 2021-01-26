@@ -1,11 +1,12 @@
 import React from 'react'
 import ActionSheet from 'react-native-actionsheet'
 import Entypo from 'react-native-vector-icons/Entypo/'
-import {View, Text, TouchableOpacity} from 'react-native'
+import {View, TouchableOpacity} from 'react-native'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {API, graphqlOperation, Storage} from 'aws-amplify';
-import {createMessage} from '../graphql/mutations';
-import {sendMessage} from './InputBox'
+import {Storage} from 'aws-amplify';
+import {sendMessage} from '../utilities/messages';
+
+
 class AttachmentActionSheet extends React.Component {
   state = {
     attachment: null
@@ -24,7 +25,6 @@ class AttachmentActionSheet extends React.Component {
       Storage.put(`${name}.jpeg`, blob, {
         contentType: 'image/jpeg',
       }).then(async (r) => {
-        console.log(r)
         sendMessage(r.key, this.props.chatRoomId, this.props.userId, 'photo')
       })
     } catch (err) {
@@ -47,7 +47,6 @@ class AttachmentActionSheet extends React.Component {
   onPress = (index) => {
     switch (index){
       case 0:
-        console.log("Camera should launch")
         launchCamera(this.launchCameraOptions, response => this.uploadFile(response))
         break
 
@@ -62,7 +61,7 @@ class AttachmentActionSheet extends React.Component {
     return (
       <View>
          <TouchableOpacity onPress={this.showActionSheet}>
-           <Entypo name='attachment' size={24} color='gray' style={{marginHorizontal: 5}}/>
+           <Entypo name='attachment' size={24} style={{marginHorizontal: 5}} color="black"/>
          </TouchableOpacity>
         <ActionSheet
           ref={o => this.ActionSheet = o}

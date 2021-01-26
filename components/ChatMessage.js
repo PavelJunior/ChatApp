@@ -2,28 +2,24 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native'
 import moment from 'moment'
 import {Storage} from 'aws-amplify';
-
-
+import AudioMessage from '../components/AudioMessage'
 
 const ChatMessage = (props) => {
-  const [image, setImage] = useState(null)
+  const [file, setFile] = useState(null)
   const {message, myId} = props;
 
   useEffect( () => {
-   const getImage = async() => {
+   const getFile = async() => {
      const url = await Storage.get(message.content)
-     setImage(url)
+     setFile(url)
    }
-
-   getImage()
+   getFile()
 
   }, [])
 
   const isMyMessage = () => {
     return message.user.id === myId;
   }
-
-  // <Image source={{uri: uri}} width={60} height={60}/>
 
   return (
     <View style={styles.container}>
@@ -34,16 +30,13 @@ const ChatMessage = (props) => {
       }]}>
         {!isMyMessage() && <Text style={styles.name}>{message.user.name}</Text>}
         {message.type === 'text' && <Text style={styles.message}>{message.content}</Text>}
-        {message.type === 'photo' && <Image source={{ url: image }} style={styles.image}/>}
+        {message.type === 'photo' && <Image source={{ url: file }} style={styles.image}/>}
+        {message.type === 'audio' && <AudioMessage file={file}/>}
         <Text style={styles.time}>{moment(message.createdAt).fromNow()}</Text>
       </View>
     </View>
   )
 }
-
-// const win = Dimensions.get('window');
-// win.width = win.width - 50 - 20;
-// const aspectRatio
 
 const styles = StyleSheet.create({
   container: {
