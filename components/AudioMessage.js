@@ -13,10 +13,6 @@ const AudioMessage = (props) => {
 
   useEffect(() => {
     const getPlayer = async () => {
-      if (props.file == null){
-        return
-      }
-
       const audioPlayer = await new Sound(props.file, null, (e) => {
         const duration = audioPlayer.getDuration()
         setDuration(duration)
@@ -27,7 +23,9 @@ const AudioMessage = (props) => {
       setAudioPlayer(audioPlayer)
     }
 
-    getPlayer()
+    if (props.file != null) {
+      getPlayer()
+    }
   }, [props.file])
 
   const onRecordPlay = async () => {

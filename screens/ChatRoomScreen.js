@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {StyleSheet, Text, FlatList, ImageBackground, KeyboardAvoidingView} from 'react-native'
+import {StyleSheet, ScrollView, FlatList, ImageBackground, KeyboardAvoidingView} from 'react-native'
 
 import { useRoute } from '@react-navigation/native';
 
@@ -12,21 +12,37 @@ import {onCreateMessage} from "../graphql/subscriptions";
 
 
 const ChatsRoomScreen = (props) => {
+  const [nextToken, setNextToken] = useState(null)
   const [messages, setMessages] = useState([])
   const [myId, setMyId] = useState(null)
   const route = useRoute();
 
   const fetchMessages = async () => {
+    let queryVariables = {
+      chatRoomID: route.params.id,
+      sortDirection: "DESC",
+    }
+
+    if(nextToken != null){
+      queryVariables.nextToken = nextToken
+    }
+
     const messagesData = await API.graphql(
       graphqlOperation(
-        messagesByChatRoom, {
-          chatRoomID: route.params.id,
-          sortDirection: "DESC",
-        }
+        messagesByChatRoom, queryVariables
       )
     )
 
-    setMessages(messagesData.data.messagesByChatRoom.items)
+    setMessages([...messages, ...messagesData.data.messagesByChatRoom.items])
+    setNextToken(messagesData.data.messagesByChatRoom.nextToken)
+  }
+
+  const loadNextPage = () => {
+    if(nextToken != null){
+      fetchMessages()
+    } else {
+      return
+    }
   }
 
   useEffect(() => {
@@ -63,19 +79,20 @@ const ChatsRoomScreen = (props) => {
 
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
-    >
-      <ImageBackground style={styles.background} source={BG}>
-        <FlatList data={messages}
-                  renderItem={({item}) => <ChatMessage message={item} myId={myId}/>}
-                  keyExtractor={(item) => item.id}
-                  inverted
-        />
-        <InputBox chatRoomId={route.params.id}/>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={100}
+      >
+        <ImageBackground style={styles.background} source={BG}>
+          <FlatList data={messages}
+                    renderItem={({item}) => <ChatMessage message={item} myId={myId}/>}
+                    keyExtractor={(item) => item.id}
+                    onEndReached={loadNextPage}
+                    inverted
+          />
+          <InputBox chatRoomId={route.params.id}/>
+        </ImageBackground>
+      </KeyboardAvoidingView>
   )
 }
 
