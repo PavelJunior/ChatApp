@@ -32,18 +32,20 @@ const InputBox = (props) => {
   }, [])
 
   const onMessageSend = async () => {
-    await sendMessage(message, chatRoomId, userId, 'text')
-    setMessage('')
-  }
+    props.addFakeMessageWhileUploading({
+      type: 'text',
+      content: message,
+      user: {id: userId, name: ""},
+    })
 
-  const showActionSheet = () => {
-    this.ActionSheet.show()
+    sendMessage(message, chatRoomId, userId, 'text')
+    setMessage('')
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <AttachmentActionSheet userId={userId} chatRoomId={chatRoomId}/>
+        <AttachmentActionSheet userId={userId} chatRoomId={chatRoomId} addFakeMessageWhileUploading={props.addFakeMessageWhileUploading}/>
       </View>
       <View style={styles.mainContainer}>
         <TextInput placeholder="Type a message"
@@ -56,7 +58,11 @@ const InputBox = (props) => {
       </View>
       <TouchableOpacity>
         <View style={styles.buttonContainer}>
-          {!message ? <MessageAudioRecorder userId={userId} chatRoomId={chatRoomId}/> :
+          {!message ?
+            <MessageAudioRecorder userId={userId}
+                                  chatRoomId={chatRoomId}
+                                  addFakeMessageWhileUploading={props.addFakeMessageWhileUploading}/>
+                                  :
             <MaterialIcons name="send" size={28} color="white" onPress={onMessageSend}/>
           }
         </View>

@@ -14,6 +14,12 @@ const MessageAudioRecorder = (props) => {
 
   const uploadFile = async (result) => {
     try {
+      props.addFakeMessageWhileUploading({
+        type: 'audio',
+        content: '',
+        user: {id: props.userId, name: ""},
+      })
+
       const response = await fetch(result)
       const blob = await response.blob()
       const name = Math.random().toString(36).substring(7)

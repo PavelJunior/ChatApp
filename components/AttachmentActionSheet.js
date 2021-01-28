@@ -18,6 +18,12 @@ class AttachmentActionSheet extends React.Component {
 
   uploadFile = async (data) => {
     try {
+      this.props.addFakeMessageWhileUploading({
+        type: 'photo',
+        content: '',
+        user: {id: this.props.userId, name: ""},
+      })
+
       const response = await fetch(data.uri)
       const blob = await response.blob()
       const name = Math.random().toString(36).substring(7)

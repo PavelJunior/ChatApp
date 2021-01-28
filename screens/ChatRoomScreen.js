@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {StyleSheet, ScrollView, FlatList, ImageBackground, KeyboardAvoidingView} from 'react-native'
+import {StyleSheet, TouchableOpacity, Text, FlatList, ImageBackground, KeyboardAvoidingView} from 'react-native'
 
 import { useRoute } from '@react-navigation/native';
 
@@ -81,6 +81,10 @@ const ChatsRoomScreen = (props) => {
     return () => subscription.unsubscribe();
   }, [])
 
+  const addFakeMessageWhileUploading = (message) => {
+      setMessages([message, ...messages])
+  }
+
   return (
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -93,7 +97,7 @@ const ChatsRoomScreen = (props) => {
                     onEndReached={loadNextPage}
                     inverted
           />
-          <InputBox chatRoomId={route.params.id}/>
+          <InputBox chatRoomId={route.params.id} addFakeMessageWhileUploading={addFakeMessageWhileUploading}/>
         </ImageBackground>
       </KeyboardAvoidingView>
   )
