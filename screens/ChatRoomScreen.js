@@ -18,23 +18,27 @@ const ChatsRoomScreen = (props) => {
   const route = useRoute();
 
   const fetchMessages = async () => {
-    let queryVariables = {
-      chatRoomID: route.params.id,
-      sortDirection: "DESC",
-    }
+    try {
+      let queryVariables = {
+        chatRoomID: route.params.id,
+        sortDirection: "DESC",
+      }
 
-    if(nextToken != null){
-      queryVariables.nextToken = nextToken
-    }
+      if(nextToken != null){
+        queryVariables.nextToken = nextToken
+      }
 
-    const messagesData = await API.graphql(
-      graphqlOperation(
-        messagesByChatRoom, queryVariables
+      const messagesData = await API.graphql(
+        graphqlOperation(
+          messagesByChatRoom, queryVariables
+        )
       )
-    )
 
-    setMessages([...messages, ...messagesData.data.messagesByChatRoom.items])
-    setNextToken(messagesData.data.messagesByChatRoom.nextToken)
+      setMessages([...messages, ...messagesData.data.messagesByChatRoom.items])
+      setNextToken(messagesData.data.messagesByChatRoom.nextToken)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const loadNextPage = () => {
@@ -77,7 +81,6 @@ const ChatsRoomScreen = (props) => {
     return () => subscription.unsubscribe();
   }, [])
 
-
   return (
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -101,7 +104,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%'
   },
-
 })
 
 export default ChatsRoomScreen;

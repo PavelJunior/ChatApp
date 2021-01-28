@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   leftContainer: {
+    flex: 0.8,
     flexDirection: 'row',
   },
   midContainer: {

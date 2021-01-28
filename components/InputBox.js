@@ -10,8 +10,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {sendMessage} from '../utilities/messages';
 import MessageAudioRecorder from './MessageAudioRecorder'
 
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-
 
 MaterialIcons.loadFont()
 Entypo.loadFont()
