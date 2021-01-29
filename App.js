@@ -52,8 +52,8 @@ function App(){
 
   return (
     <NavigationContainer>
-      <MainTabNavigation />
-      <StatusBar style="auto" />
+        <MainTabNavigation />
+        <StatusBar style="auto" />
     </NavigationContainer>
   );
 }
