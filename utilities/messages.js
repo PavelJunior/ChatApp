@@ -36,7 +36,7 @@ export const messageDelete = async (messageId) => {
     )
 
     const chatRoomId = deletedMessageData.data.deleteMessage.chatRoomID
-    isLastMessageUpdateNeeded(chatRoomId)
+    await isLastMessageUpdateNeeded(chatRoomId)
   } catch (e) {
     console.log(e)
   }
@@ -68,8 +68,7 @@ const isLastMessageUpdateNeeded = async (chatRoomId) => {
     const markedAsLastMessage = chatRoom.data.getChatRoom.lastMessageID
 
     if (lastMessageId !== markedAsLastMessage){
-      console.log(lastMessageId)
-      updateChatRoomLastMessage(chatRoomId, lastMessageId)
+      await updateChatRoomLastMessage(chatRoomId, lastMessageId)
     }
 
   } catch (e) {

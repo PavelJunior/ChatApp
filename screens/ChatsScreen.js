@@ -46,19 +46,6 @@ const ChatsScreen = () => {
 
   useEffect(() => {
     const subscription = API.graphql(
-      graphqlOperation(onDeleteMessage)
-    ).subscribe({
-      next: (data) => {
-        // check whether you need to update or not
-        fetchChatRooms()
-      }
-    })
-
-    return () => subscription.unsubscribe();
-  }, [])
-
-  useEffect(() => {
-    const subscription = API.graphql(
       graphqlOperation(onUpdateChatRoom)
     ).subscribe({
       next: (data) => {
