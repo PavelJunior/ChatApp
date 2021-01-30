@@ -8,7 +8,7 @@ import InputBox from './../components/InputBox'
 import BG from './../assets/images/BG.png'
 import {API, graphqlOperation, Auth} from "aws-amplify";
 import {messagesByChatRoom} from "../graphql/customQueries";
-import {onCreateMessage} from "../graphql/subscriptions";
+import {onCreateMessage, onDeleteMessage} from '../graphql/subscriptions';
 
 
 const ChatsRoomScreen = (props) => {
@@ -77,7 +77,25 @@ const ChatsRoomScreen = (props) => {
         fetchMessages()
       }
     })
+    return () => subscription.unsubscribe();
+  }, [])
 
+
+  useEffect(() => {
+    const subscription = API.graphql(
+      graphqlOperation(onDeleteMessage)
+    ).subscribe({
+      next: (data) => {
+        const deletedMessage = data.value.data.onDeleteMessage;
+
+        if(deletedMessage && deletedMessage.chatRoomID !== route.params.id){
+          console.log("Message is in another room.")
+          return;
+        }
+
+        fetchMessages()
+      }
+    })
     return () => subscription.unsubscribe();
   }, [])
 

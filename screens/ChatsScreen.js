@@ -4,7 +4,7 @@ import ChatListItem from './../components/ChatListItem'
 
 import { API, Auth, graphqlOperation } from 'aws-amplify'
 import { getUser } from './../graphql/customQueries'
-import {onCreateChatRoom, onCreateMessage} from "../graphql/subscriptions";
+import {onDeleteMessage, onCreateMessage, onUpdateChatRoom} from "../graphql/subscriptions";
 
 const ChatsScreen = () => {
   const [chatRooms, setChatRooms] = useState([])
@@ -20,7 +20,6 @@ const ChatsScreen = () => {
           }
         )
       )
-
       let newChatRooms = userData.data.getUser.chatRoomUser.items;
       setChatRooms(newChatRooms.filter(item => item.chatRoom.lastMessage))
     } catch (e) {
@@ -35,6 +34,32 @@ const ChatsScreen = () => {
   useEffect(() => {
     const subscription = API.graphql(
       graphqlOperation(onCreateMessage)
+    ).subscribe({
+      next: (data) => {
+        // check whether you need to update or not
+        fetchChatRooms()
+      }
+    })
+
+    return () => subscription.unsubscribe();
+  }, [])
+
+  useEffect(() => {
+    const subscription = API.graphql(
+      graphqlOperation(onDeleteMessage)
+    ).subscribe({
+      next: (data) => {
+        // check whether you need to update or not
+        fetchChatRooms()
+      }
+    })
+
+    return () => subscription.unsubscribe();
+  }, [])
+
+  useEffect(() => {
+    const subscription = API.graphql(
+      graphqlOperation(onUpdateChatRoom)
     ).subscribe({
       next: (data) => {
         // check whether you need to update or not
