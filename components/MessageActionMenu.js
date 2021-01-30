@@ -2,6 +2,7 @@ import React from 'react';
 
 import { View, Text } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
+import {messageDelete} from './../utilities/messages'
 
 class MessageActionMenu extends React.PureComponent {
   _menu = null;
@@ -14,6 +15,11 @@ class MessageActionMenu extends React.PureComponent {
         this.hideMenu()
       }
     }
+  }
+
+  onMessageDelete = () => {
+    this.hideMenu()
+    messageDelete(this.props.messageId)
   }
 
   setMenuRef = ref => {
@@ -36,7 +42,7 @@ class MessageActionMenu extends React.PureComponent {
           ref={this.setMenuRef}
           button={<Text></Text>}
         >
-          <MenuItem onPress={this.hideMenu}>Delete</MenuItem>
+          <MenuItem onPress={this.onMessageDelete}>Delete</MenuItem>
           <MenuItem onPress={this.hideMenu}>Edit</MenuItem>
         </Menu>
       </View>

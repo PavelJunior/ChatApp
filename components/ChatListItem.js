@@ -34,8 +34,7 @@ const ChatListItem = (props) => {
   }
 
   const getLastMessage = () => {
-
-    if (lastMessage.type == 'text') {
+    if (!lastMessage || lastMessage.type == 'text') {
       return lastMessage ? lastMessage.content : ""
     } else if (lastMessage.type == 'photo') {
       return ("Photo")
